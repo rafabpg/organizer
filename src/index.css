@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove o "flash" azul ao tocar em botões no celular */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Inputs nativos (data, select) seguem o tema claro/escuro do sistema */
+:root {
+  color-scheme: light dark;
+}
