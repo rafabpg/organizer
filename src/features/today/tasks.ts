@@ -1,6 +1,6 @@
 import type { Period, RoutineConfig, TaskType } from '@/config/schema';
 import { dayKeyOf, type ISODate } from '@/shared/lib/dates';
-import { describeStage, planForDate, readingGoalFor, runPlanFor } from '@/shared/lib/dayPlan';
+import { planForDate, readingGoalFor, runPlanFor } from '@/shared/lib/dayPlan';
 import { workoutForDate } from '@/shared/lib/rotation';
 
 /**
@@ -69,10 +69,9 @@ export function buildDayTasks(config: RoutineConfig, date: ISODate): DayTask[] {
         const plan = runPlanFor(config, date);
         tasks.push({
           ...base,
-          title: plan.variantLabel ? `Trote · ${plan.variantLabel}` : 'Trote',
-          description: `${describeStage(plan)} · ${plan.totalMinutes} min`,
+          title: plan.variantLabel ? `Corrida · ${plan.variantLabel}` : 'Corridinha',
+          description: `${plan.totalMinutes} min`,
           minimumDescription: `${minimumVersion.runMinutes} min`,
-          link: '/trote',
           countsForStreak: true,
         });
         break;

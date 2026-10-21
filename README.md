@@ -51,10 +51,10 @@ Toda a rotina está em [`src/config/routine.config.json`](src/config/routine.con
 Campos principais:
 
 - `schedule`: compromissos fixos (aulas), por dia (`mon`…`sun`).
-- `weeklyPlan`: tarefas de cada dia. Tipos: `workout`, `run`, `reading`, `rest`, `weeklyPlanning`, `custom` (com `title`). Opcionais: `period` (`morning`/`afternoon`/`night`), `pagesGoal` (leitura) e `variant` (trote).
+- `weeklyPlan`: tarefas de cada dia. Tipos: `workout`, `run`, `reading`, `rest`, `weeklyPlanning`, `custom` (com `title`). Opcionais: `period` (`morning`/`afternoon`/`night`), `pagesGoal` (leitura) e `variant` (corrida).
 - `workoutRotation`: em que dias tem treino e qual treino cai em cada um. Cada linha de `pattern` é uma semana; a contagem começa na semana de `startDate`.
 - `workouts`: exercícios de cada treino, com `reps` (`"12-15"`, `"max"`) ou `durationSeconds`.
-- `run.stages`: etapas do trote por semana do programa (a partir de `run.startDate`). `run.variants` acrescenta minutos (ex.: longão).
+- `run.defaultMinutes`: duração padrão da corridinha (e `run.variants` para acrescentar minutos, ex.: mais longa).
 - `minimumVersion`: o que vale como "versão mínima" num dia ruim.
 
 ## Arquitetura
@@ -64,9 +64,8 @@ src/
   app/        App, rotas (HashRouter), layout com barra inferior
   config/     routine.config.json + schema Zod + useConfig (padrão + edição salva)
   features/
-    today/    checklist do dia, versão mínima, status do dia (usado na sequência)
-    workout/  sessões, séries, "última vez", progressão, timer de descanso
-    run/      etapa atual e timer de intervalos
+    today/    checklist do dia, versão mínima, dia de recuperação, status do dia
+    workout/  sessões, séries, "última vez", progressão, timer de descanso e prancha
     reading/  livros e páginas
     progress/ sequência, calendário, gráficos, medidas/fotos, refeições livres
     settings/ formulário, JSON bruto, backup

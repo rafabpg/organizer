@@ -52,13 +52,6 @@ export const exerciseSchema = z
     message: 'Informe "reps" ou "durationSeconds"',
   });
 
-export const runStageSchema = z.object({
-  weeks: z.tuple([z.number().int().positive(), z.number().int().positive()]),
-  totalMinutes: z.number().positive(),
-  runSeconds: z.number().int().positive(),
-  walkSeconds: z.number().int().min(0),
-});
-
 export const configSchema = z.object({
   timezone: z.string().default('America/Sao_Paulo'),
   schedule: z.array(scheduleItemSchema),
@@ -76,13 +69,14 @@ export const configSchema = z.object({
     repsThreshold: z.number().int().positive(),
     tips: z.array(z.string()),
   }),
-  run: z.object({
-    startDate: isoDateSchema,
-    stages: z.array(runStageSchema).min(1),
-    variants: z
-      .record(z.string(), z.object({ label: z.string(), extraMinutes: z.number() }))
-      .default({}),
-  }),
+  run: z
+    .object({
+      defaultMinutes: z.number().positive().default(20),
+      variants: z
+        .record(z.string(), z.object({ label: z.string(), extraMinutes: z.number() }))
+        .default({}),
+    })
+    .default({ defaultMinutes: 20, variants: {} }),
   reading: z.object({ dailyPagesGoal: z.number().int().positive() }),
   minimumVersion: z.object({
     runMinutes: z.number().positive(),
@@ -103,7 +97,6 @@ export type PlanTask = z.infer<typeof planTaskSchema>;
 export type TaskType = PlanTask['type'];
 export type Period = NonNullable<PlanTask['period']>;
 export type Exercise = z.infer<typeof exerciseSchema>;
-export type RunStage = z.infer<typeof runStageSchema>;
 
 /** Valida um objeto qualquer e devolve config ou mensagens de erro legíveis. */
 export function validateConfig(

@@ -7,6 +7,7 @@ import { dayStatus, type DayStatus } from './dayLog';
 
 export const STATUS_COLORS: Record<DayStatus, string> = {
   done: 'bg-emerald-500 text-white',
+  recovery: 'bg-sky-400 text-sky-950 dark:bg-sky-600 dark:text-white',
   minimum: 'bg-emerald-300 text-emerald-950',
   partial: 'bg-amber-300 text-amber-950',
   missed: 'bg-rose-200 text-rose-900 dark:bg-rose-900/60 dark:text-rose-100',

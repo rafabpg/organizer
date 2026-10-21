@@ -1,11 +1,10 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { BookOpen, CalendarCheck, Dumbbell, Footprints, Settings, TrendingUp, type LucideIcon } from 'lucide-react';
+import { BookOpen, CalendarCheck, Dumbbell, Settings, TrendingUp, type LucideIcon } from 'lucide-react';
 import { cn } from '@/shared/ui';
 
 const NAV_ITEMS: Array<{ to: string; label: string; icon: LucideIcon }> = [
   { to: '/', label: 'Hoje', icon: CalendarCheck },
   { to: '/treino', label: 'Treino', icon: Dumbbell },
-  { to: '/trote', label: 'Trote', icon: Footprints },
   { to: '/leitura', label: 'Leitura', icon: BookOpen },
   { to: '/progresso', label: 'Progresso', icon: TrendingUp },
   { to: '/ajustes', label: 'Ajustes', icon: Settings },

@@ -23,7 +23,7 @@ import { Button, Card, Field, Input, NumberInput, Select, Textarea } from '@/sha
 
 const TASK_LABELS: Record<TaskType, string> = {
   workout: 'Treino',
-  run: 'Trote',
+  run: 'Corridinha',
   reading: 'Leitura',
   rest: 'Descanso',
   weeklyPlanning: 'Planejar semana',
@@ -79,13 +79,19 @@ export function ConfigForm() {
               onChange={(v) => update((d) => (d.measurements.everyWeeks = v ?? 0))}
             />
           </Field>
+          <Field label="Corrida padrão (min)">
+            <NumberInput
+              value={draft.run.defaultMinutes}
+              onChange={(v) => update((d) => (d.run.defaultMinutes = v ?? 20))}
+            />
+          </Field>
           <Field label="Descanso (s)" hint="Separe por vírgula">
             <CsvNumbers value={draft.restSeconds} onChange={(v) => update((d) => (d.restSeconds = v))} />
           </Field>
         </div>
         <p className="mb-2 mt-4 text-sm font-semibold">Versão mínima</p>
         <div className="grid grid-cols-3 gap-3">
-          <Field label="Trote (min)">
+          <Field label="Corrida (min)">
             <NumberInput value={draft.minimumVersion.runMinutes} onChange={(v) => update((d) => (d.minimumVersion.runMinutes = v ?? 0))} />
           </Field>
           <Field label="Séries/exerc.">
@@ -101,18 +107,13 @@ export function ConfigForm() {
       </Section>
 
       <Section title="Datas de início">
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Rotação de treinos" hint="Semana 1 do padrão A/B">
-            <Input
-              type="date"
-              value={draft.workoutRotation.startDate}
-              onChange={(e) => update((d) => (d.workoutRotation.startDate = e.target.value))}
-            />
-          </Field>
-          <Field label="Programa de trote">
-            <Input type="date" value={draft.run.startDate} onChange={(e) => update((d) => (d.run.startDate = e.target.value))} />
-          </Field>
-        </div>
+        <Field label="Rotação de treinos" hint="Semana 1 do padrão A/B">
+          <Input
+            type="date"
+            value={draft.workoutRotation.startDate}
+            onChange={(e) => update((d) => (d.workoutRotation.startDate = e.target.value))}
+          />
+        </Field>
       </Section>
 
       <Section title="Agenda fixa (aulas)">
@@ -183,7 +184,7 @@ export function ConfigForm() {
                       value={t.variant ?? ''}
                       onChange={(e) => update((d) => (d.weeklyPlan[day]![i].variant = e.target.value || undefined))}
                     >
-                      <option value="">Trote normal</option>
+                      <option value="">Corrida normal</option>
                       {Object.entries(draft.run.variants).map(([key, v]) => (
                         <option key={key} value={key}>
                           {v.label} (+{v.extraMinutes} min)
@@ -242,7 +243,7 @@ export function ConfigForm() {
       </Section>
 
       <p className="text-xs text-slate-500">
-        Rotação A/B, etapas do trote e variantes são editadas na aba JSON.
+        Rotação A/B e variantes de corrida são editadas na aba JSON.
       </p>
 
       {/* Barra de salvar fixa */}

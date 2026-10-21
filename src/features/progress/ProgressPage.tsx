@@ -4,7 +4,6 @@ import { CalendarCard } from './CalendarCard';
 import { ExerciseChart } from './ExerciseChart';
 import { FreeMealsCard } from './FreeMealsCard';
 import { MeasurementsSection } from './MeasurementsSection';
-import { RunChart } from './RunChart';
 import { StreakCard } from './StreakCard';
 
 type Tab = 'geral' | 'graficos' | 'medidas';
@@ -34,7 +33,6 @@ export function ProgressPage() {
       {tab === 'graficos' && (
         <div className="space-y-4">
           <ExerciseChart />
-          <RunChart />
         </div>
       )}
       {tab === 'medidas' && <MeasurementsSection />}

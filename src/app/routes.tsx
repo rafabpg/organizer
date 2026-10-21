@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from './Layout';
 import { TodayPage } from '@/features/today/TodayPage';
 import { WorkoutPage } from '@/features/workout/WorkoutPage';
-import { RunPage } from '@/features/run/RunPage';
 import { ReadingPage } from '@/features/reading/ReadingPage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
 
@@ -19,7 +18,6 @@ export function AppRoutes() {
       <Route element={<Layout />}>
         <Route index element={<TodayPage />} />
         <Route path="treino" element={<WorkoutPage />} />
-        <Route path="trote" element={<RunPage />} />
         <Route path="leitura" element={<ReadingPage />} />
         <Route
           path="progresso"

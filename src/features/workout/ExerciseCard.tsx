@@ -1,8 +1,11 @@
-import { Check, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { Check, Play, Sparkles, Square } from 'lucide-react';
 import type { Exercise } from '@/config/schema';
 import { useConfig } from '@/config/useConfig';
 import type { SetEntry } from '@/shared/db/db';
+import { alertUser, unlockAudio } from '@/shared/lib/alerts';
 import { shortDate } from '@/shared/lib/dates';
+import { useCountdown } from '@/shared/lib/useCountdown';
 import { Card, NumberInput, cn } from '@/shared/ui';
 import { reachedThreshold, targetLabel } from './progression';
 
@@ -15,12 +18,30 @@ interface Props {
   onSetDone: () => void; // dispara o timer de descanso
 }
 
+/** Extrai o número base de segundos (ex.: "30-45" -> 30) */
+function parseDefaultSeconds(durationSeconds?: string): number {
+  const m = durationSeconds?.match(/\d+/);
+  return m ? Number(m[0]) : 30;
+}
+
 /** Um exercício: alvo, "última vez", linhas de séries e aviso de progressão */
 export function ExerciseCard({ exercise, setCount, sets, last, onChange, onSetDone }: Props) {
   const { config } = useConfig();
   const isDuration = !exercise.reps;
   const unit = isDuration ? 's' : 'reps';
   const levelUp = reachedThreshold(exercise, sets, config.progressionRule.repsThreshold, setCount);
+  const defaultSec = parseDefaultSeconds(exercise.durationSeconds);
+
+  // Série que está com o cronômetro de execução rodando (para exercícios por tempo)
+  const [activeSet, setActiveSet] = useState<{ index: number; targetSeconds: number } | null>(null);
+  const setTimer = useCountdown(() => {
+    alertUser('end');
+    if (activeSet !== null) {
+      onChange(activeSet.index, { reps: activeSet.targetSeconds, done: true });
+      setActiveSet(null);
+      onSetDone();
+    }
+  });
 
   const formatSet = (s: SetEntry) =>
     `${s.weight !== undefined ? `${s.weight}kg×` : ''}${s.reps ?? '–'}${isDuration ? 's' : ''}`;
@@ -44,6 +65,9 @@ export function ExerciseCard({ exercise, setCount, sets, last, onChange, onSetDo
         {Array.from({ length: setCount }, (_, i) => {
           const s = sets?.[i] ?? {};
           const prev = last?.sets[i];
+          const isThisRunning = setTimer.running && activeSet?.index === i;
+          const targetSeconds = s.reps ?? prev?.reps ?? defaultSec;
+
           return (
             <div key={i} className="flex items-center gap-2">
               <span className="w-6 text-sm text-slate-500">{i + 1}</span>
@@ -56,20 +80,63 @@ export function ExerciseCard({ exercise, setCount, sets, last, onChange, onSetDo
               <span className="text-xs text-slate-400">kg</span>
               <NumberInput
                 aria-label={`${unit} série ${i + 1}`}
-                placeholder={prev?.reps !== undefined ? String(prev.reps) : unit}
+                placeholder={prev?.reps !== undefined ? String(prev.reps) : isDuration ? String(defaultSec) : unit}
                 value={s.reps}
                 onChange={(v) => onChange(i, { reps: v })}
               />
-              <span className="w-8 text-xs text-slate-400">{unit}</span>
+              <span className="w-6 text-xs text-slate-400">{unit}</span>
+
+              {isDuration && (
+                <button
+                  type="button"
+                  aria-label={isThisRunning ? `Parar cronômetro série ${i + 1}` : `Iniciar ${targetSeconds}s série ${i + 1}`}
+                  onClick={() => {
+                    unlockAudio();
+                    if (isThisRunning) {
+                      setTimer.stop();
+                      setActiveSet(null);
+                    } else {
+                      setActiveSet({ index: i, targetSeconds });
+                      setTimer.start(targetSeconds);
+                    }
+                  }}
+                  className={cn(
+                    'flex h-10 min-w-12 shrink-0 items-center justify-center gap-1 rounded-xl border-2 px-2 text-xs font-semibold transition-colors',
+                    isThisRunning
+                      ? 'border-amber-500 bg-amber-500 text-white'
+                      : 'border-slate-300 text-slate-600 hover:border-emerald-500 dark:border-slate-600 dark:text-slate-300',
+                  )}
+                >
+                  {isThisRunning ? (
+                    <>
+                      <Square size={12} fill="currentColor" />
+                      <span className="font-mono">{setTimer.remainingSeconds}s</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play size={14} fill="currentColor" />
+                      <span>{targetSeconds}s</span>
+                    </>
+                  )}
+                </button>
+              )}
+
               <button
                 type="button"
                 aria-label={`Concluir série ${i + 1}`}
                 onClick={() => {
-                  // Se deixou em branco, usa os valores da última vez
+                  if (isThisRunning) {
+                    setTimer.stop();
+                    setActiveSet(null);
+                  }
+                  // Se deixou em branco, usa os valores da última vez (ou o padrão de segundos)
                   const patch: Partial<SetEntry> = { done: !s.done };
                   if (!s.done) {
                     if (s.weight === undefined && prev?.weight !== undefined) patch.weight = prev.weight;
-                    if (s.reps === undefined && prev?.reps !== undefined) patch.reps = prev.reps;
+                    if (s.reps === undefined) {
+                      if (prev?.reps !== undefined) patch.reps = prev.reps;
+                      else if (isDuration) patch.reps = defaultSec;
+                    }
                   }
                   onChange(i, patch);
                   if (!s.done) onSetDone();

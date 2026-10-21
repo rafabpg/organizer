@@ -19,6 +19,7 @@ export interface DayLog {
   date: string;
   done: Record<string, boolean>;
   minimum: boolean; // "versão mínima" marcada
+  recovery?: boolean; // "dia de recuperação" (dor muscular: dispensa treino/corrida)
 }
 
 export interface SetEntry {

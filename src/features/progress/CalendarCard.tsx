@@ -74,6 +74,7 @@ export function CalendarCard() {
 
       <div className="mt-3 flex flex-wrap gap-3 text-xs text-slate-500">
         <Legend className={STATUS_COLORS.done} label="Cumprido" />
+        <Legend className={STATUS_COLORS.recovery} label="Recuperação" />
         <Legend className={STATUS_COLORS.minimum} label="Mínimo" />
         <Legend className={STATUS_COLORS.partial} label="Parcial" />
         <Legend className={STATUS_COLORS.missed} label="Não feito" />

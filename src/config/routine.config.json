@@ -29,6 +29,7 @@
       { "id": "barbell-row", "name": "Remada curvada com barra", "sets": 3, "reps": "10-12" },
       { "id": "romanian-deadlift", "name": "Terra romeno com barra", "sets": 3, "reps": "10-12" },
       { "id": "lateral-raise", "name": "Elevação lateral", "equipment": "Halteres 2-3kg", "sets": 3, "reps": "12-15" },
+      { "id": "curl", "name": "Rosca com barra", "sets": 2, "reps": "12" },
       { "id": "plank", "name": "Prancha", "sets": 3, "durationSeconds": "30-45" }
     ],
     "B": [
@@ -37,7 +38,6 @@
       { "id": "one-arm-row", "name": "Remada unilateral", "equipment": "Kettlebell 8kg", "sets": 3, "reps": "12", "perSide": true },
       { "id": "kb-swing", "name": "Swing com kettlebell", "sets": 3, "reps": "15" },
       { "id": "db-press", "name": "Desenvolvimento em pé", "equipment": "Halteres 5kg", "sets": 3, "reps": "10-12" },
-      { "id": "curl", "name": "Rosca com barra", "sets": 2, "reps": "12" },
       { "id": "triceps-ext", "name": "Tríceps francês", "sets": 2, "reps": "12" },
       { "id": "dead-bug", "name": "Dead bug", "sets": 3, "reps": "10", "perSide": true }
     ]
@@ -47,14 +47,9 @@
     "tips": ["Descer em 3 segundos", "Pausa de 2s embaixo", "Versão com uma perna", "Flexão com pés elevados", "Aumentar o peso"]
   },
   "run": {
-    "startDate": "2026-10-20",
-    "stages": [
-      { "weeks": [1, 2], "totalMinutes": 20, "runSeconds": 60, "walkSeconds": 120 },
-      { "weeks": [3, 4], "totalMinutes": 20, "runSeconds": 120, "walkSeconds": 60 },
-      { "weeks": [5, 99], "totalMinutes": 30, "runSeconds": 1800, "walkSeconds": 0 }
-    ],
+    "defaultMinutes": 20,
     "variants": {
-      "long": { "label": "Longão", "extraMinutes": 10 }
+      "long": { "label": "Mais longa", "extraMinutes": 10 }
     }
   },
   "reading": { "dailyPagesGoal": 10 },
